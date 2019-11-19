@@ -1,0 +1,83 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+#variable: !include alarm.yaml
+#group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+#sensor: !include sensors.yaml
+
+mqtt:
+  discovery: true
+  broker: 127.0.0.1
+  port: 1883
+  username: hassio
+  password: hassio
+  keepalive: 60
+  birth_message:
+    topic: 'hass/status'
+    payload: 'online'
+  will_message:
+    topic: 'hass/status'
+    payload: 'offline'
+
+logger:
+  default: warning
+  logs:
+    homeassistant.components.device_tracker.mqtt: debug
+    homeassistant.components.mqtt: debug
+    homeassistant.components.notify: info
+    homeassistant.components.automation: info
+
+# netatmo:
+#   api_key:
+#   secret_key:
+#   username:
+#   password:
+
+# media_player:
+#   - platform: kodi
+#     host: 127.0.0.1
+#     port: 80
+
+#stream:
+#  stream_source: rtsp://admin:Canada@192.168.22.134:10554/udp/av0_0
+#  filename: /tmp/svetla-dvorek.mp4
+
+# notify:
+#   - name: iPhone
+#     platform: pushover
+#     api_key:
+#     user_key:
+
+variable:
+  alarm:
+    value: false
+    attributes:
+      icon: mdi:alarm
+
+script:
+  enable_alarm:
+    sequence:
+      - service: variable.set_variable
+        data:
+          variable: alarm
+          value: true
+  disable_alarm:
+    sequence:
+      - service: variable.set_variable
+        data:
+          variable: alarm
+          value: false
+
+
+

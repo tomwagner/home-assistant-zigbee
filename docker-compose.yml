@@ -1,0 +1,40 @@
+version: "2"
+services:
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt:1.7.1
+    volumes:
+      - ./zigbee2mqtt:/app/data
+    devices:
+      # CC251
+      # - /dev/cc2531:/dev/ttyACM0
+      # CP2102
+      - /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0:/dev/ttyACM0
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Europe/Prague
+  mosquitto:
+    image: eclipse-mosquitto:1.6.7
+    container_name: "mosquitto"
+    restart: "always"
+    network_mode: host
+    volumes:
+      - "./mosquitto:/mosquitto"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+  home-assistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:0.101.3
+    ports:
+      - 8123:8123
+    volumes:
+      - ./home-assistant:/config
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Europe/Prague
+    depends_on:
+      - mosquitto
+      - zigbee2mqtt
