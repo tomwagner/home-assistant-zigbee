@@ -2,7 +2,7 @@ version: "2"
 services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    image: koenkk/zigbee2mqtt:1.7.1
+    image: koenkk/zigbee2mqtt:1.17.0
     volumes:
       - ./zigbee2mqtt:/app/data
     devices:
@@ -15,7 +15,7 @@ services:
     environment:
       - TZ=Europe/Prague
   mosquitto:
-    image: eclipse-mosquitto:1.6.7
+    image: eclipse-mosquitto:1.6.9
     container_name: "mosquitto"
     restart: "always"
     network_mode: host
@@ -26,7 +26,7 @@ services:
       - "9001:9001"
   home-assistant:
     container_name: home-assistant
-    image: homeassistant/home-assistant:0.101.3
+    image: homeassistant/home-assistant:2021.1.4
     ports:
       - 8123:8123
     volumes:
